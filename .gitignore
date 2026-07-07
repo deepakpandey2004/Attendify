@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.env
+app/uploads/selfies/*
+app/uploads/reference_faces/*
+!app/uploads/selfies/.gitkeep
+!app/uploads/reference_faces/.gitkeep
+venv/
+.vscode/

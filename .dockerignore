@@ -1,0 +1,54 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.pytest_cache
+.mypy_cache
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Env files (secrets)
+.env
+.env.local
+.env.*.local
+
+# Git
+.git/
+.gitignore
+
+# Docs
+README.md
+*.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Ngrok
+ngrok.exe
+*.exe
+
+# Local DB
+*.db
+*.sqlite
+
+# Uploads (mounted as volume)
+app/uploads/selfies/*
+app/uploads/reference_faces/*
+!app/uploads/selfies/.gitkeep
+!app/uploads/reference_faces/.gitkeep

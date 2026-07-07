@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: attendify_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: attendify_secret
+      POSTGRES_DB: attendance_db
+    ports:
+      - "5433:5432"   # host 5433 → container 5432 (avoids conflict with local postgres)
+    volumes:
+      - attendify_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d attendance_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: attendify_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:attendify_secret@db:5432/attendance_db
+      SECRET_KEY: attendify-docker-dev-secret-key-min-32-characters-long
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 1440
+    ports:
+      - "8000:8000"
+    volumes:
+      - attendify_uploads:/app/app/uploads
+      # Optional: mount code for live reload during dev (uncomment below)
+      # - ./app:/app/app
+      # - ./frontend:/app/frontend
+
+volumes:
+  attendify_pg_data:
+  attendify_uploads:
