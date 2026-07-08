@@ -59,17 +59,20 @@ async function apiCall(endpoint, options = {}) {
     }
 
     const response = await fetch(`${CONFIG.API_BASE_URL}${endpoint}`, { ...options, headers });
-
-    // Auto-logout on token expiry
-    if (response.status === 401) {
-        clearAuth();
-        if (window.location.pathname !== "/") {
-            window.location.href = "/";
-        }
-        throw new Error("Session expired. Please sign in again.");
-    }
-
     const data = await response.json().catch(() => ({}));
+
+    // Auto-logout ONLY when token is actually invalid (401 with specific auth message)
+    if (response.status === 401) {
+        const msg = (typeof data.detail === "string" ? data.detail : "").toLowerCase();
+        const isTokenIssue = msg.includes("credentials") || msg.includes("token") || msg.includes("expired") || msg.includes("authenticate");
+        if (isTokenIssue) {
+            clearAuth();
+            if (window.location.pathname !== "/") {
+                window.location.href = "/";
+            }
+            throw new Error("Session expired. Please sign in again.");
+        }
+    }
 
     if (!response.ok) {
         const msg = data.detail || `Error: ${response.status}`;

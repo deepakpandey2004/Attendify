@@ -51,9 +51,9 @@ async def _verify_face_and_save_selfie(
     if not compare_faces(reference_encoding, new_encoding):
         distance = get_face_distance(reference_encoding, new_encoding)
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"User photo not matched. Face does not match reference. (distance={distance:.3f})",
-        )
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail=f"Face does not match your reference selfie. Please ensure you are the registered user. (match distance: {distance:.3f})",
+    )
 
     file_ext = Path(file.filename).suffix or ".jpg"
     filename = f"user_{user.id}_{action}_{uuid.uuid4().hex}{file_ext}"
