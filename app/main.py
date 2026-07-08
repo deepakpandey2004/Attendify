@@ -61,10 +61,26 @@ app.mount("/css", StaticFiles(directory=str(FRONTEND_DIR / "css")), name="css")
 app.mount("/js", StaticFiles(directory=str(FRONTEND_DIR / "js")), name="js")
 
 
+def _serve_favicon():
+    """Shared favicon logic — used by both /favicon.ico and /favicon.svg routes"""
+    from fastapi.responses import Response
+    favicon_path = FRONTEND_DIR / "favicon.svg"
+    try:
+        if favicon_path.exists():
+            return FileResponse(str(favicon_path), media_type="image/svg+xml")
+    except Exception as e:
+        print(f"[favicon] Error: {e}")
+    return Response(status_code=204)
+
+
 @app.get("/favicon.ico", include_in_schema=False)
+def favicon_ico():
+    return _serve_favicon()
+
+
 @app.get("/favicon.svg", include_in_schema=False)
-def favicon():
-    return FileResponse(FRONTEND_DIR / "favicon.svg", media_type="image/svg+xml")
+def favicon_svg():
+    return _serve_favicon()
 
 
 @app.get("/")
