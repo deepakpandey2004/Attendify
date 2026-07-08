@@ -1,4 +1,5 @@
 # ===== Attendify Dockerfile =====
+# Cache bust: 2026-07-08
 FROM python:3.11-slim
 
 # Prevent Python from writing .pyc + buffering stdout
