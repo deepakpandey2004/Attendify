@@ -19,46 +19,6 @@ Modern SaaS attendance platform that eliminates proxy attendance through AI face
 
 </div>
 
-
-## 📸 Preview
-
-<div align="center">
-
-<table>
-  <tr>
-    <td align="center"><b>Login / Sign Up</b></td>
-    <td align="center"><b>Dashboard</b></td>
-  </tr>
-  <tr>
-    <td><img src="docs/screenshots/login.png" alt="Login page" width="450"/></td>
-    <td><img src="docs/screenshots/dashboard.png" alt="Dashboard" width="450"/></td>
-  </tr>
-</table>
-
-</div>
-
-
-<div align="center">
-
-<img src="frontend/favicon.svg" alt="Attendify Logo" width="80" height="80" />
-
-# Attendify
-
-### Face-verified smart attendance system with geolocation tracking
-
-Modern SaaS attendance platform that eliminates proxy attendance through AI face recognition, live GPS tracking, and automated background scheduling.
-
-[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Render](https://img.shields.io/badge/Deployed-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-**[🌐 Live Demo](https://attendify-eufw.onrender.com)** · **[📖 API Docs](https://attendify-eufw.onrender.com/api/docs)** · **[🐛 Report Bug](https://github.com/deepakpandey2004/Attendify/issues)**
-
-</div>
-
 ---
 
 ## 📸 Preview
