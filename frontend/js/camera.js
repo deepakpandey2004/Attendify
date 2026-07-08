@@ -40,9 +40,15 @@ class CameraCapture {
             this.video.srcObject = this.stream;
 
             this.video.onloadedmetadata = () => {
-                this.loading.classList.add("hidden");
-                if (this.faceGuide) this.faceGuide.classList.remove("hidden");
-            };
+    this.loading.style.display = "none";
+    this.loading.classList.add("hidden");
+    if (this.faceGuide) {
+        this.faceGuide.style.display = "flex";
+        this.faceGuide.classList.remove("hidden");
+    }
+    // Explicitly play video (some browsers need this)
+    this.video.play().catch(e => console.warn("Video play error:", e));
+};
         } catch (err) {
             this.loading.innerHTML = `
                 <div class="text-center text-red-300 p-6">
@@ -156,18 +162,23 @@ class CameraCapture {
 }
 
     capture() {
-        const ctx = this.canvas.getContext("2d");
-        this.canvas.width = this.video.videoWidth;
-        this.canvas.height = this.video.videoHeight;
-        ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+    const ctx = this.canvas.getContext("2d");
+    this.canvas.width = this.video.videoWidth;
+    this.canvas.height = this.video.videoHeight;
+    ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
 
-        if (this.addOverlay) this._drawOverlay(ctx);
+    if (this.addOverlay) this._drawOverlay(ctx);
 
-        this.video.classList.add("hidden");
-        this.canvas.classList.remove("hidden");
-        if (this.faceGuide) this.faceGuide.classList.add("hidden");
-        this.captured = true;
+    this.video.style.display = "none";
+    this.video.classList.add("hidden");
+    this.canvas.style.display = "block";
+    this.canvas.classList.remove("hidden");
+    if (this.faceGuide) {
+        this.faceGuide.style.display = "none";
+        this.faceGuide.classList.add("hidden");
     }
+    this.captured = true;
+}
 
     _drawOverlay(ctx) {
         const now = new Date();
@@ -231,11 +242,16 @@ class CameraCapture {
     }
 
     retake() {
-        this.canvas.classList.add("hidden");
-        this.video.classList.remove("hidden");
-        if (this.faceGuide) this.faceGuide.classList.remove("hidden");
-        this.captured = false;
+    this.canvas.style.display = "none";
+    this.canvas.classList.add("hidden");
+    this.video.style.display = "block";
+    this.video.classList.remove("hidden");
+    if (this.faceGuide) {
+        this.faceGuide.style.display = "flex";
+        this.faceGuide.classList.remove("hidden");
     }
+    this.captured = false;
+}
 
     getBlob() {
         return new Promise((resolve) => {
