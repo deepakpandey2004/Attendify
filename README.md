@@ -34,6 +34,14 @@ Modern SaaS attendance platform that eliminates proxy attendance through AI face
     <td><img src="docs/screenshots/login.png" alt="Login page" width="450"/></td>
     <td><img src="docs/screenshots/dashboard.png" alt="Dashboard" width="450"/></td>
   </tr>
+  <tr>
+    <td align="center"><b>Camera Capture</b></td>
+    <td align="center"><b>Attendance History</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/capture.png" alt="Camera capture" width="450"/></td>
+    <td><img src="docs/screenshots/history.png" alt="Attendance history" width="450"/></td>
+  </tr>
 </table>
 
 </div>
