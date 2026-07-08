@@ -27,7 +27,8 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install dlib-bin==20.0.1 && \
     pip install --no-deps face_recognition face_recognition_models && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && \
+    pip install --force-reinstall bcrypt==4.0.1
 
 # Copy full project
 COPY . .
