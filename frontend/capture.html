@@ -3,75 +3,166 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mark Attendance</title>
+    <title>Mark Attendance — Attendify</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="description" content="Attendify — Face-verified smart attendance with geolocation tracking." />
-    <meta name="theme-color" content="#6366f1" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+        body { background: var(--gray-900); color: white; min-height: 100vh; margin: 0; }
+        .capture-wrap { max-width: 640px; margin: 0 auto; padding: 16px; }
+        .cap-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .cap-back {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: rgba(255,255,255,0.08);
+            display: flex; align-items: center; justify-content: center;
+            color: white; text-decoration: none; transition: background 0.15s;
+        }
+        .cap-back:hover { background: rgba(255,255,255,0.15); }
+        .cap-title { font-size: 18px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+        .cap-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 2px; margin-bottom: 0; }
+
+        .camera-box {
+            position: relative;
+            background: black;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            max-height: 50vh;
+            aspect-ratio: 4/3;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+        .camera-box video, .camera-box canvas {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .camera-loading {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: #000; color: white;
+        }
+        .face-guide-oval {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none;
+        }
+        .face-guide-oval::before {
+            content: ''; width: 200px; height: 260px;
+            border: 3px solid rgba(255,255,255,0.5);
+            border-radius: 50%;
+        }
+        .live-info-panel {
+            position: absolute; bottom: 10px; left: 10px; right: 10px;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(8px);
+            border-radius: 8px; padding: 8px 10px;
+            font-size: 12px;
+        }
+        .live-info-panel .info-row {
+            display: flex; align-items: flex-start; gap: 6px;
+            margin-bottom: 3px;
+        }
+        .live-info-panel .info-row:last-child { margin-bottom: 0; }
+        .live-info-panel svg { width: 13px; height: 13px; flex-shrink: 0; margin-top: 2px; }
+
+        .action-buttons {
+            display: flex; gap: 10px;
+        }
+        .action-btn-large {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 15px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px; border: none; cursor: pointer;
+            transition: all 0.15s;
+            font-family: 'Inter', sans-serif;
+        }
+        .action-btn-large svg { width: 18px; height: 18px; }
+        .btn-capture-lg { background: white; color: #0f172a; }
+        .btn-capture-lg:hover { background: #e2e8f0; }
+        .btn-retake-lg {
+            background: rgba(255,255,255,0.1); color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-retake-lg:hover { background: rgba(255,255,255,0.2); }
+        .btn-submit-lg { background: #10b981; color: white; }
+        .btn-submit-lg:hover { background: #059669; }
+        .btn-submit-lg:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .security-note {
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 14px;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+    </style>
 </head>
 
-<body class="min-h-screen bg-gray-900 text-white p-4">
-    <div class="max-w-2xl mx-auto">
-        <!-- Header -->
-        <div class="flex items-center gap-3 mb-4">
-            <a href="/dashboard" class="text-white/70 hover:text-white">
-                <i class="fas fa-arrow-left text-xl"></i>
+<body>
+    <div class="capture-wrap">
+        <div class="cap-header">
+            <a href="/dashboard" class="cap-back">
+                <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
             </a>
-            <div>
-                <h1 id="page-title" class="text-xl font-bold">Mark Attendance</h1>
-                <p id="page-subtitle" class="text-sm text-white/60"></p>
+            <div style="flex:1;">
+                <h1 id="page-title" class="cap-title">Mark Attendance</h1>
+                <p id="page-subtitle" class="cap-sub"></p>
             </div>
+            <div id="action-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;"></div>
         </div>
 
-        <!-- Camera -->
-        <div class="relative bg-black rounded-xl overflow-hidden mb-4 shadow-2xl" style="aspect-ratio: 4/3;">
-            <video id="video" autoplay playsinline class="w-full h-full object-cover"></video>
-            <canvas id="canvas" class="hidden w-full h-full object-cover absolute inset-0"></canvas>
+        <div class="camera-box">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display:none;position:absolute;inset:0;"></canvas>
 
-            <div id="camera-loading" class="absolute inset-0 flex items-center justify-center bg-black text-white">
-                <div class="text-center">
-                    <i class="fas fa-camera text-5xl mb-3 opacity-70 animate-pulse"></i>
-                    <p>Starting camera & getting location...</p>
+            <div id="camera-loading" class="camera-loading">
+                <div style="text-align:center;">
+                    <i data-lucide="video" style="width:44px;height:44px;opacity:0.7;margin-bottom:10px;"></i>
+                    <p style="font-size:13px;">Starting camera &amp; getting location...</p>
                 </div>
             </div>
 
-            <div id="face-guide" class="hidden absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div class="w-56 h-72 border-4 border-white/50 rounded-full"></div>
-            </div>
+            <div id="face-guide" class="face-guide-oval" style="display:none;"></div>
 
-            <!-- Live info overlay (only in video mode) -->
-            <div id="live-info" class="hidden absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur p-2 rounded text-xs font-mono">
-                <p><i class="fas fa-clock"></i> <span id="live-time"></span></p>
-                <p><i class="fas fa-location-dot"></i> <span id="live-location">Fetching location...</span></p>
+            <div id="live-info" class="live-info-panel" style="display:none;">
+                <div class="info-row">
+                    <i data-lucide="clock"></i>
+                    <span id="live-time" style="font-family:monospace;font-weight:600;"></span>
+                </div>
+                <div class="info-row">
+                    <i data-lucide="map-pin"></i>
+                    <span id="live-location" style="line-height:1.4;">Fetching location...</span>
+                </div>
             </div>
         </div>
 
-        <!-- Buttons -->
-        <div class="flex gap-3">
-            <button id="capture-btn"
-                class="flex-1 bg-white text-gray-900 py-4 rounded-xl font-bold hover:bg-gray-100 transition flex items-center justify-center gap-2 text-lg">
-                <i class="fas fa-camera"></i>
+        <div class="action-buttons">
+            <button id="capture-btn" class="action-btn-large btn-capture-lg">
+                <i data-lucide="camera"></i>
                 Capture
             </button>
-            <button id="retake-btn" class="hidden flex-1 bg-gray-700 text-white py-4 rounded-xl font-bold hover:bg-gray-600 transition flex items-center justify-center gap-2 text-lg">
-                <i class="fas fa-redo"></i>
+            <button id="retake-btn" class="action-btn-large btn-retake-lg" style="display:none;">
+                <i data-lucide="rotate-ccw"></i>
                 Retake
             </button>
-            <button id="submit-btn" class="hidden flex-1 bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition flex items-center justify-center gap-2 text-lg">
-                <i class="fas fa-check"></i>
+            <button id="submit-btn" class="action-btn-large btn-submit-lg" style="display:none;">
+                <i data-lucide="check"></i>
                 <span id="submit-btn-text">Submit</span>
             </button>
         </div>
 
-        <p class="text-xs text-white/60 text-center mt-4">
-            <i class="fas fa-shield-halved"></i>
-            Only live camera photos are accepted. Gallery access is disabled.
+        <p class="security-note">
+            <i data-lucide="shield-check" style="width:13px;height:13px;"></i>
+            Only live camera photos accepted. Gallery access is disabled.
         </p>
     </div>
 
     <script src="/js/config.js"></script>
+    <script src="/js/layout.js"></script>
     <script src="/js/camera.js"></script>
     <script src="/js/attendance.js"></script>
 </body>
