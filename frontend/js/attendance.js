@@ -87,32 +87,42 @@ if (retakeBtn) {
 
 if (submitBtn) {
     submitBtn.addEventListener("click", async () => {
-        const btnText = document.getElementById("submit-btn-text");
-        if (btnText) btnText.textContent = "Submitting...";
-        submitBtn.disabled = true;
+    const btnText = document.getElementById("submit-btn-text");
 
-        try {
-            const blob = await cam.getBlob();
-            const loc = cam.getLocation();
-            if (!loc) throw new Error("Location not available");
+    // Safety check — ensure photo was captured
+    if (!cam.captured) {
+        showToast("Please capture a photo first before submitting", "error");
+        return;
+    }
 
-            const addr = cam.getAddress() || `Lat:${loc.latitude.toFixed(4)}, Lng:${loc.longitude.toFixed(4)}`;
+    btnText.textContent = "Submitting...";
+    submitBtn.disabled = true;
 
-            const formData = new FormData();
-            formData.append("file", blob, `${action}.jpg`);
-            formData.append("latitude", loc.latitude);
-            formData.append("longitude", loc.longitude);
-            formData.append("address", addr);
-
-            await apiCall(`/attendance/${action}`, { method: "POST", body: formData });
-
-            showToast(`${action === "login" ? "Login" : "Logout"} marked successfully!`, "success");
-            cam.stop();
-            setTimeout(() => window.location.href = "/dashboard", 1200);
-        } catch (err) {
-            showToast(err.message || "Failed to mark attendance", "error");
-            if (btnText) btnText.textContent = "Submit";
-            submitBtn.disabled = false;
+    try {
+        const blob = await cam.getBlob();
+        if (!blob) {
+            throw new Error("Failed to capture photo. Please try again.");
         }
-    });
+        const loc = cam.getLocation();
+        if (!loc) throw new Error("Location not available. Please enable GPS.");
+
+        const addr = cam.getAddress() || `Lat:${loc.latitude.toFixed(4)}, Lng:${loc.longitude.toFixed(4)}`;
+
+        const formData = new FormData();
+        formData.append("file", blob, `${action}.jpg`);
+        formData.append("latitude", loc.latitude);
+        formData.append("longitude", loc.longitude);
+        formData.append("address", addr);
+
+        await apiCall(`/attendance/${action}`, { method: "POST", body: formData });
+
+        showToast(`${action === "login" ? "Login" : "Logout"} marked successfully!`, "success");
+        cam.stop();
+        setTimeout(() => window.location.href = "/dashboard", 1200);
+    } catch (err) {
+        showToast(err.message || "Failed to mark attendance", "error");
+        btnText.textContent = "Submit";
+        submitBtn.disabled = false;
+    }
+});
 }

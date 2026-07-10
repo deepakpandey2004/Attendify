@@ -215,12 +215,22 @@
             submitBtn.style.display = "none";
         });
 
-        submitBtn.addEventListener("click", async () => {
+                submitBtn.addEventListener("click", async () => {
             const btnText = document.getElementById("submit-btn-text");
+
+            // Safety check — ensure photo was captured
+            if (!cam.captured) {
+                showToast("Please capture a photo first before submitting", "error");
+                return;
+            }
+
             btnText.textContent = "Uploading...";
             submitBtn.disabled = true;
             try {
                 const blob = await cam.getBlob();
+                if (!blob) {
+                    throw new Error("Failed to capture photo. Please try again.");
+                }
                 const formData = new FormData();
                 formData.append("file", blob, "reference.jpg");
                 await apiCall("/auth/upload-reference-face", { method: "POST", body: formData });
