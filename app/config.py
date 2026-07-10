@@ -29,6 +29,9 @@ class Settings:
     AUTO_LOGOUT_HOUR: int = 23       # 11 PM
     AUTO_LOGOUT_MINUTE: int = 59     # :59 → 11:59 PM auto logout
 
+    MONTHLY_SALARY: float = 30000.00
+    CURRENCY: str = "₹"
+
     # Ensure upload dirs exist
     def __init__(self):
         self.SELFIE_DIR.mkdir(parents=True, exist_ok=True)

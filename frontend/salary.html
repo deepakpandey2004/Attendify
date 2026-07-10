@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Salary — Attendify</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+
+        <div class="main-content">
+            <div id="topbar-container"></div>
+
+            <div class="page-content">
+                <!-- Header -->
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 24px; flex-wrap:wrap; gap:14px;">
+                    <div>
+                        <h2 style="font-size:24px; font-weight:700; color:var(--gray-900); letter-spacing:-0.02em; margin:0;">
+                            Salary Breakdown
+                        </h2>
+                        <p style="color:var(--gray-500); font-size:14px; margin-top:4px;">
+                            Monthly salary calculation based on your attendance
+                        </p>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <label style="font-size:13px; color:var(--gray-600); font-weight:500;">Month:</label>
+                        <select id="month-select" class="form-input" style="width:auto; padding:8px 14px;"></select>
+                    </div>
+                </div>
+
+                <!-- Main Salary Card -->
+                <div id="salary-card" class="card" style="margin-bottom:20px;">
+                    <div class="card-body">
+                        <div style="text-align:center; padding:40px;">
+                            <i data-lucide="loader" class="animate-spin" style="width:32px; height:32px; color:var(--gray-400);"></i>
+                            <p style="color:var(--gray-500); margin-top:8px; font-size:13px;">Calculating salary...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Breakdown Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <i data-lucide="calendar-range" style="width:18px; height:18px; color:var(--brand-600);"></i>
+                            <span class="card-title">Daily Breakdown</span>
+                        </div>
+                        <span id="record-count" style="font-size:12px; color:var(--gray-500);"></span>
+                    </div>
+                    <div id="breakdown-container">
+                        <div style="padding:40px; text-align:center;">
+                            <div class="skeleton" style="height:40px; margin-bottom:8px;"></div>
+                            <div class="skeleton" style="height:40px; margin-bottom:8px;"></div>
+                            <div class="skeleton" style="height:40px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/salary.js"></script>
+</body>
+</html>

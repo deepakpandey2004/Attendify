@@ -107,6 +107,14 @@ def serve_history():
 def serve_capture():
     return FileResponse(FRONTEND_DIR / "capture.html")
 
+@app.get("/settings")
+def serve_settings():
+    return FileResponse(FRONTEND_DIR / "settings.html")
+
+@app.get("/salary")
+def serve_salary():
+    return FileResponse(FRONTEND_DIR / "salary.html")
+
 
 @app.get("/health")
 def health_check():

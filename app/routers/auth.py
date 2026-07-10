@@ -1,13 +1,11 @@
-"""
-Authentication routes: signup, login, upload reference face
-"""
 from fastapi import APIRouter, Depends, UploadFile, File, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.user import (
     UserSignup, UserLogin, UserResponse,
-    TokenResponse, SignupResponse, MessageResponse
+    TokenResponse, SignupResponse, MessageResponse,
+    ChangePasswordRequest
 )
 from app.services import auth_service
 from app.utils.dependencies import get_current_user
@@ -76,3 +74,20 @@ async def upload_reference_face(
 def get_me(current_user: User = Depends(get_current_user)):
     """Get current logged-in user's profile"""
     return current_user
+
+@router.post("/change-password", response_model=MessageResponse)
+def change_password(
+    payload: ChangePasswordRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Change current user's password"""
+    auth_service.change_user_password(
+        db, current_user,
+        payload.current_password,
+        payload.new_password
+    )
+    return MessageResponse(
+        message="Password changed successfully!",
+        success=True
+    )

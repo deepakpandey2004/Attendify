@@ -4,7 +4,7 @@ Pydantic schemas for attendance requests and responses
 from pydantic import BaseModel
 from datetime import datetime, date
 from typing import Optional, List
-
+from datetime import datetime, date
 
 class AttendanceRecord(BaseModel):
     id: Optional[int] = None

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings — Attendify</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+
+        <div class="main-content">
+            <div id="topbar-container"></div>
+
+            <div class="page-content">
+                <!-- Header -->
+                <div style="margin-bottom: 24px;">
+                    <h2 style="font-size:24px; font-weight:700; color:var(--gray-900); letter-spacing:-0.02em; margin:0;">
+                        Settings
+                    </h2>
+                    <p style="color:var(--gray-500); font-size:14px; margin-top:4px;">
+                        Manage your account preferences and security
+                    </p>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr; gap:20px; max-width:720px;">
+
+                    <!-- Profile Info Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <i data-lucide="user-circle" style="width:18px; height:18px; color:var(--brand-600);"></i>
+                                <span class="card-title">Profile Information</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+                                <div class="avatar" style="width:64px; height:64px; font-size:22px;" id="profile-avatar">U</div>
+                                <div style="flex:1;">
+                                    <div id="profile-name" style="font-size:16px; font-weight:600; color:var(--gray-900);">Loading...</div>
+                                    <div id="profile-email" style="font-size:13px; color:var(--gray-500); margin-top:2px;">—</div>
+                                    <div id="profile-status" style="margin-top:6px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Change Password Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <i data-lucide="lock" style="width:18px; height:18px; color:var(--brand-600);"></i>
+                                <span class="card-title">Change Password</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="password-form">
+                                <div class="form-group">
+                                    <label class="form-label">Current Password</label>
+                                    <div class="form-input-wrapper">
+                                        <span class="form-input-icon"><i data-lucide="lock"></i></span>
+                                        <input type="password" name="current_password" required minlength="6"
+                                            class="form-input form-input-with-icon"
+                                            placeholder="Enter your current password" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">New Password</label>
+                                    <div class="form-input-wrapper">
+                                        <span class="form-input-icon"><i data-lucide="key"></i></span>
+                                        <input type="password" name="new_password" required minlength="6"
+                                            class="form-input form-input-with-icon"
+                                            placeholder="At least 6 characters" />
+                                    </div>
+                                    <p style="font-size:11px; color:var(--gray-500); margin-top:4px;">
+                                        Use a strong password with at least 6 characters
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Confirm New Password</label>
+                                    <div class="form-input-wrapper">
+                                        <span class="form-input-icon"><i data-lucide="key"></i></span>
+                                        <input type="password" name="confirm_password" required minlength="6"
+                                            class="form-input form-input-with-icon"
+                                            placeholder="Re-enter new password" />
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="margin-top:8px;">
+                                    <i data-lucide="check"></i>
+                                    <span id="submit-btn-text">Update Password</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <i data-lucide="zap" style="width:18px; height:18px; color:var(--brand-600);"></i>
+                                <span class="card-title">Quick Actions</span>
+                            </div>
+                        </div>
+                        <div class="card-body" style="display:flex; flex-direction:column; gap:10px;">
+                            <button onclick="handleExcelExport()" class="btn btn-secondary" style="justify-content:flex-start;">
+                                <i data-lucide="file-spreadsheet"></i>
+                                Download Attendance Report (Excel)
+                            </button>
+                            <button onclick="if(confirm('Sign out of Attendify?')){ clearAuth(); location.href='/'; }" class="btn btn-secondary" style="justify-content:flex-start; color:var(--danger-600);">
+                                <i data-lucide="log-out"></i>
+                                Sign Out
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- App Info Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <i data-lucide="info" style="width:18px; height:18px; color:var(--brand-600);"></i>
+                                <span class="card-title">About Attendify</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:13px;">
+                                <div>
+                                    <div style="color:var(--gray-500); font-size:11px; text-transform:uppercase; font-weight:600;">Version</div>
+                                    <div style="color:var(--gray-800); font-weight:600; margin-top:2px;">1.0.0</div>
+                                </div>
+                                <div>
+                                    <div style="color:var(--gray-500); font-size:11px; text-transform:uppercase; font-weight:600;">Environment</div>
+                                    <div style="color:var(--gray-800); font-weight:600; margin-top:2px;">Production</div>
+                                </div>
+                                <div>
+                                    <div style="color:var(--gray-500); font-size:11px; text-transform:uppercase; font-weight:600;">Face Match</div>
+                                    <div style="color:var(--success-600); font-weight:600; margin-top:2px;">✓ Enabled</div>
+                                </div>
+                                <div>
+                                    <div style="color:var(--gray-500); font-size:11px; text-transform:uppercase; font-weight:600;">Auto Logout</div>
+                                    <div style="color:var(--success-600); font-weight:600; margin-top:2px;">✓ 11:59 PM</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/settings.js"></script>
+</body>
+</html>

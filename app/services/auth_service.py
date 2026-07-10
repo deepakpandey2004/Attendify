@@ -150,3 +150,25 @@ async def upload_reference_face(db: Session, user: User, file: UploadFile) -> Us
     db.commit()
     db.refresh(user)
     return user
+
+
+def change_user_password(db: Session, user: User, current_password: str, new_password: str) -> User:
+    # Verify current password
+    if not verify_password(current_password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Current password is incorrect"
+        )
+    
+    # Prevent same password
+    if current_password == new_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="New password must be different from current password"
+        )
+    
+    # Update to new hashed password
+    user.hashed_password = hash_password(new_password)
+    db.commit()
+    db.refresh(user)
+    return user
